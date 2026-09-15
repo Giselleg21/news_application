@@ -1,0 +1,56 @@
+header{
+    text-align: center;
+    font-size: 50;
+    background-color: rgb(234, 74, 74);
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 60px;
+    padding: 50px;
+    font-weight: bold;
+}
+
+.btn-primary:hover{
+    background-color: rgb(241, 91, 91);
+    border-color: black;
+    color: black
+}
+
+.btn-primary{
+    background-color: #f4f1ea;
+    color: black;
+    border-color: black;
+    font-weight: bold;
+}
+
+.btn-secondary{
+    border-radius: 8px;
+    border-color: black;
+    background-color: white;
+}
+
+.btn-secondary:hover{
+    color: rgb(241, 91, 91);
+    background-color: #f4f1ea
+}
+
+.navbar{
+    background-color: rgb(241, 91, 91);
+}
+
+body {
+    background-color: #f4f1ea;
+}
+
+h1 {
+    color: #333333;
+    padding-bottom: 20px;
+    border: 10px;
+}
+
+a {
+    color: black;
+    font-size: 20px;
+}
+
+a:hover {
+    color:rgb(241, 91, 91)
+}

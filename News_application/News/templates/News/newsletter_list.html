@@ -1,0 +1,27 @@
+{% extends 'News/base.html' %}
+
+{% block content %}
+<h1 style="text-align: center">Newsletters</h1>
+
+
+    {% if newsletters %}
+        <ul>
+            {% for newsletter in newsletters %}
+                <li>
+                    <a href="{% url 'newsletter_detail' newsletter.id %}">
+                        {{ newsletter.title }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    
+    {% else %}
+        <p>No newsletters currently available</p>
+    {% endif %}
+
+    {% if user.role == 'journalist' %}
+        <a href="{% url 'newsletter_create' %}">
+            <button type="button" class="btn-primary">Add newsletter</button>
+        </a>
+    {% endif %}
+{% endblock content %}

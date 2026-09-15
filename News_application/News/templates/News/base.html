@@ -1,0 +1,62 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+        crossorigin="anonymous"
+    >
+
+    <!-- Your custom CSS -->
+    <link rel="stylesheet" href="{% static 'News/style.css' %}">
+
+    <title>
+        {% block title %}News Application{% endblock %}
+    </title>
+</head>
+
+<body>
+
+    {% block header %}
+    <div class="container-fluid">
+        <div class="row" style="padding-bottom: 10px">
+            <div class="col-md-12">
+                <h1></h1>
+
+                {% block navbar %}
+                    {% include 'News/navbar.html' %}
+                {% endblock navbar %}
+
+            </div>
+        </div>
+    </div>
+    {% endblock header %}
+
+    <!-- Page content -->
+    <main class="container my-4">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Bootstrap JavaScript -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"
+    ></script>
+    {% block footer %}
+    <footer>
+        <br><br>
+        <button onclick="history.back()" class="btn-secondary">Go Back</button>
+    </footer>
+    {% endblock footer %}
+</body>
+</html>

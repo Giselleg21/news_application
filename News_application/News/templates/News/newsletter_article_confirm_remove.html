@@ -1,0 +1,50 @@
+{% extends 'News/base.html' %}
+
+{% block title %}
+    Remove Article - News Application
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+
+                <h1 class="mb-4">
+                    Remove Article
+                </h1>
+
+                <p>
+                    Are you sure you want to remove
+                    <strong>{{ article.title }}</strong>
+                    from
+                    <strong>{{ newsletter.title }}</strong>?
+                </p>
+
+                <p class="text-muted">
+                    The article will not be deleted. It will only be
+                    removed from this newsletter.
+                </p>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <button type="submit" class="btn btn-danger">
+                        Yes, Remove Article
+                    </button>
+
+                    <a href="{% url 'newsletter_detail' newsletter.id %}"
+                       class="btn btn-secondary" style="color:black">
+                        Cancel
+                    </a>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}

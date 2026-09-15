@@ -1,0 +1,32 @@
+{% extends 'News/base.html' %}
+
+{% block navbar %}{% endblock navbar %}
+
+
+{% block content %}
+    <h1>Login</h1>
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        {% if reader %}
+        <a href="{% url 'reader_home' %}">
+            <button type="submit" class="btn-secondary">Login</button>
+        </a>
+        {% elif journalist %}
+        <a href="{% url 'journalist_home' %}">
+            <button type="submit" class="btn-secondary">Login</button>
+        </a>
+        {% else %}
+        <a href="{% url 'editor_home' %}">
+            <button type="submit" class="btn-secondary">Login</button>
+        </a>
+        {% endif %}
+    </form>
+
+    <p>Forgot your password?</p>
+    <a href="{% url 'password_reset' %}">
+        <button type="submit" class="btn-secondary">Reset Password</button>
+    </a>
+{% endblock content %}

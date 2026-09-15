@@ -1,0 +1,52 @@
+{% extends 'News/base.html' %}
+
+{% block title %}
+    Article Form - News Application
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+
+        <h1 class="text-center mb-4">
+            {% if article %}
+                Edit Article
+            {% else %}
+                Create Article
+            {% endif %}
+        </h1>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    {{ form.as_p }}
+
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            {% if article %}
+                                Update Article
+                            {% else %}
+                                Create Article
+                            {% endif %}
+                        </button>
+
+                        <a href="{% url 'article_list' %}"
+                           class="btn btn-secondary" style="color:black">
+                            Cancel
+                        </a>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}
+

@@ -1,0 +1,21 @@
+{% extends 'News/base.html' %}
+
+{% block title %}
+    Register
+{% endblock title %}
+
+{% block content %}
+    <h1>Create an Account</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button class="btn-primary" type="submit">Register</button>
+    </form>
+
+    <br>
+
+    <a style="color:black;" href="{% url 'login' %}">Already have an account? Log in</a>
+{% endblock content %}
