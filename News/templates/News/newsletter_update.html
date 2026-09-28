@@ -1,0 +1,48 @@
+{% extends 'News/base.html' %}
+
+{% block title %}
+Edit Newsletter - News Application
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+
+```
+    <h1 class="text-center mb-4">
+        Edit Newsletter
+    </h1>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <form method="post">
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <div class="mt-3">
+
+                    <button type="submit" class="btn btn-primary">
+                        Update Newsletter
+                    </button>
+
+                    <a href="{% url 'newsletter_detail' newsletter.id %}"
+                       class="btn btn-secondary" style="color: black">
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+```
+
+</div>
+
+{% endblock content %}

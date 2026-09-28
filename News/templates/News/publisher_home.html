@@ -1,0 +1,29 @@
+{% extends 'News/base.html' %}
+
+{% block content %}
+
+<h1>Welcome Publisher!</h1>
+
+{% if user.owned_publisher %}
+    <a href="{% url 'view_publication' %}">
+        <button type="button" class="btn-secondary">
+            View My Publication
+        </button>
+    </a>
+{% else %}
+    <a href="{% url 'publisher_create' %}">
+        <button type="button" class="btn-secondary">
+            Create Publication
+        </button>
+    </a>
+{% endif %}
+
+<br><br>
+
+<a href="{% url 'manage_journalists' %}">Manage Journalists</a>
+
+<br><br>
+
+<a href="{% url 'manage_editors' %}">Manage Editors</a>
+
+{% endblock content %}

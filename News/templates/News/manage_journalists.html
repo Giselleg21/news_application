@@ -1,0 +1,48 @@
+{% extends 'News/base.html' %}
+
+{% block content %}
+
+<h1>Manage Journalists</h1>
+
+<p>
+    Select your journalists:
+</p>
+
+<form method="POST">
+    {% csrf_token %}
+
+    {% for journalist in journalists %}
+        <div>
+            <label>
+                <input
+                    type="checkbox"
+                    name="journalists"
+                    value="{{ journalist.id }}"
+                    {% if journalist in publisher.journalists.all %}
+                        checked
+                    {% endif %}
+                >
+                {{ journalist.username }}
+            </label>
+        </div>
+    {% empty %}
+        <p>No registered journalists are currently available.</p>
+    {% endfor %}
+
+</form>
+
+<br><br>
+
+    <a href="{% url 'view_publication' %}">
+        <button type="submit" class="btn-primary">
+            Save
+        </button>
+    </a>
+
+<br><br>
+
+<a href="{% url 'publisher_home' %}">
+    Back to Publisher Dashboard
+</a>
+
+{% endblock content %}

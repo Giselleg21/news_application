@@ -1,0 +1,31 @@
+{% extends 'News/base.html' %}
+
+{% block title %}
+    Home - News Application
+{% endblock %}
+
+{% block content %}
+
+{% block navbar %}{% endblock navbar %}
+
+<div class="text-center">
+    <h1 style="background-color: rgb(241, 91, 91); padding: 20px;">Welcome!</h1>
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-4">
+            <a href="{% url 'register' %}" class="btn btn-primary">
+                Register
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a href="{% url 'login' %}" class="btn btn-primary">
+                Login
+            </a>
+        </div>
+    </div>
+</div>
+
+{% block footer %}{% endblock footer %}
+
+{% endblock content %}

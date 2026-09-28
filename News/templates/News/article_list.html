@@ -1,0 +1,47 @@
+{% extends 'News/base.html' %}
+
+{% block content %}
+<h1 style="text-align: center">Articles</h1>
+
+{% if user.role == 'reader' %}
+    {% if articles %}
+        <ul>
+            {% for article in articles %}
+                {% if article.approved %}
+                    <li>
+                        <a href="{% url 'article_detail' article.id %}">
+                            {{ article.title }}
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    
+    {% else %}
+        <p>No articles currently available</p>
+    {% endif %}
+{% else %}
+    <ul>
+        {% for article in articles %}
+                <li>
+                    <a href="{% url 'article_detail' article.id %}">
+                        {{ article.title }}
+                        {% if article.approved == False %}
+                            <p>[unapproved]</p>
+                        {% else %}
+                            <p>[approved]</p>
+                        {% endif %}
+                    </a>
+                </li>
+        {% empty %}
+            <p>No articles currently available</p>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+    {% if user.role == 'journalist' %}
+        <a href="{% url 'article_create' %}">
+            <button type="button" class="btn-primary">Add article</button>
+        </a>
+    {% endif %}
+{% endblock content %}

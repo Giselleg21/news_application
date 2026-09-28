@@ -1,0 +1,30 @@
+{% extends 'News/base.html' %}
+
+{% block content %}
+
+<h1>Update Publication Name</h1>
+
+<p>
+    Current publication name:
+    <strong>{{ publisher.name }}</strong>
+</p>
+
+<form method="POST">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit" class="btn-secondary">
+        Update Publication Name
+    </button>
+</form>
+
+<br><br>
+
+<p>
+    <a href="{% url 'view_publication' %}">
+        Cancel
+    </a>
+</p>
+
+{% endblock content %}

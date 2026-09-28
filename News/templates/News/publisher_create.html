@@ -1,0 +1,44 @@
+{% extends 'News/base.html' %}
+
+{% block content %}
+
+<h1>Create Your Publication</h1>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <h2>Publication Details</h2>
+
+    {{ form.name.label_tag }}
+    {{ form.name }}
+
+    <br><br>
+
+    <h2>Journalists</h2>
+
+    <p>Select the journalists who will work for your publication.</p>
+
+    {{ form.journalists }}
+
+    <h2>Editors</h2>
+
+    <p>Select the editors who will work for your publication.</p>
+
+    {{ form.editors }}
+
+    <br>
+
+    <button type="submit" class="btn-secondary">
+        Create Publication
+    </button>
+</form>
+
+<br><br>
+
+<p>
+    <a href="{% url 'publisher_home' %}">
+        Back to Publisher Dashboard
+    </a>
+</p>
+
+{% endblock content %}

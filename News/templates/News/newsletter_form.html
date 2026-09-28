@@ -1,0 +1,51 @@
+{% extends 'News/base.html' %}
+
+{% block title %}
+    Newsletter Form - News Application
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+
+        <h1 class="text-center mb-4">
+            {% if newsletter %}
+                Edit Newsletter
+            {% else %}
+                Create Newsletter
+            {% endif %}
+        </h1>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    {{ form.as_p }}
+
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            {% if newsletter %}
+                                Update Newsletter
+                            {% else %}
+                                Create Newsletter
+                            {% endif %}
+                        </button>
+
+                        <a href="{% url 'newsletter_list' %}"
+                           class="btn btn-secondary" style="color: black">
+                            Cancel
+                        </a>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}

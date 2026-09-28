@@ -1,0 +1,48 @@
+{% extends 'News/base.html' %}
+
+{% block content %}
+
+<h1>Manage Editors</h1>
+
+<p>
+    Select your editors:
+</p>
+
+<form method="POST">
+    {% csrf_token %}
+
+    {% for editor in editors %}
+        <div>
+            <label>
+                <input
+                    type="checkbox"
+                    name="editors"
+                    value="{{ editor.id }}"
+                    {% if editor in publisher.editors.all %}
+                        checked
+                    {% endif %}
+                >
+                {{ editor.username }}
+            </label>
+        </div>
+    {% empty %}
+        <p>No registered editors are available.</p>
+    {% endfor %}
+
+</form>
+
+<br><br>
+
+<a href="{% url 'view_publication' %}">
+    <button type="submit" class="btn-primary">
+        Save
+    </button>
+</a>
+
+<br><br>
+
+<a href="{% url 'publisher_home' %}">
+    Back to Publisher Dashboard
+</a>
+
+{% endblock content %}

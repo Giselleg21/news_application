@@ -1,0 +1,20 @@
+{% extends 'News/base.html' %}
+
+{% block content %}
+
+<h1 style="text-align:center">My Newsletters</h1>
+
+{% if newsletters %} <ul>
+{% for newsletter in newsletters %} <li> <a href="{% url 'newsletter_detail' newsletter.id %}">
+{{ newsletter.title }} </a> </li>
+{% endfor %} </ul>
+{% else %} <p>You currently have no newsletters.</p>
+{% endif %}
+
+<a href="{% url 'newsletter_create' %}">
+    <button class="btn-primary">
+        Add a new newsletter
+    </button>
+</a>
+
+{% endblock content %}

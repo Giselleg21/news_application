@@ -1,0 +1,80 @@
+{% extends 'News/base.html' %}
+
+{% block content %}
+
+<h1>{{ publisher.name }}</h1>
+
+<p>
+    <strong>Owner:</strong> {{ publisher.owner.username }}
+</p>
+
+<h2>Journalists</h2>
+
+{% with journalists=publisher.journalists.all %}
+    {% if journalists %}
+        <ul>
+            {% for journalist in journalists %}
+                <li>{{ journalist.username }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No journalists have been assigned yet.</p>
+    {% endif %}
+{% endwith %}
+
+<a href="{% url 'manage_journalists' %}">
+    <button type="button" class="btn-secondary">
+        Manage Journalists
+    </button>
+</a>
+
+<br><br>
+
+<h2>Editors</h2>
+
+{% with editors=publisher.editors.all %}
+    {% if editors %}
+        <ul>
+            {% for editor in editors %}
+                <li>{{ editor.username }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No editors have been assigned yet.</p>
+    {% endif %}
+{% endwith %}
+
+<a href="{% url 'manage_editors' %}">
+    <button type="button" class="btn-secondary">
+        Manage Editors
+    </button>
+</a>
+
+<br><br>
+
+<div class="row">
+    <div class="col-md-2">
+        <a href="{% url 'publisher_delete' %}">
+            <button type="button" class="btn-primary">
+                Delete Publication
+            </button>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="{% url 'publisher_update' %}">
+            <button type="button" class="btn-primary">
+                Update Publication Name
+            </button>
+        </a>
+    </div>
+</div>
+
+<br><br> 
+
+<p>
+    <a href="{% url 'publisher_home' %}">
+        Back to Publisher Dashboard
+    </a>
+</p>
+
+{% endblock content %}
