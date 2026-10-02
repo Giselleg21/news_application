@@ -26,11 +26,31 @@ Logout - News Application
                 <button type="submit" class="btn btn-danger">
                     Yes, Log Out
                 </button>
-
-                <a href="{% url 'home' %}"
+                
+                {% if user.role == 'reader' %}
+                <a href="{% url 'reader_home' %}"
                    class="btn btn-secondary" style="color:black">
                     Cancel
                 </a>
+
+                {% elif user.role == 'editor' %}
+                <a href="{% url 'editor_home' %}"
+                   class="btn btn-secondary" style="color:black">
+                    Cancel
+                </a>
+
+                {% elif user.role == 'journalist' %}
+                <a href="{% url 'journalist_home' %}"
+                   class="btn btn-secondary" style="color:black">
+                    Cancel
+                </a>
+
+                {% else %}
+                <a href="{% url 'publisher_home' %}"
+                   class="btn btn-secondary" style="color:black">
+                    Cancel
+                </a>
+                {% endif %}
             </form>
 
         </div>

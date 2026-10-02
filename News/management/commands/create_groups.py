@@ -97,7 +97,7 @@ class Command(BaseCommand):
 
         self.stdout.write(
             self.style.SUCCESS(
-                "Reader, Journalist, Editor and Publisher " \
+                "Reader, Journalist, Editor and Publisher "
                 "groups created successfully."
             )
         )

@@ -88,7 +88,7 @@ def review_articles(request):
     ):
         return render(request, 'News/access_denied.html', status=403)
 
-    articles = Article.objects.all().order_by('-created_at')
+    articles = Article.objects.filter(approved=False).order_by('-created_at')
 
     return render(
         request,
@@ -713,6 +713,7 @@ def manage_journalists(request):
                 role='journalist'
             )
         )
+        return redirect('view_publication')
 
     journalists = CustomUser.objects.filter(role='journalist')
 
@@ -749,6 +750,7 @@ def manage_editors(request):
                 role='editor'
             )
         )
+        return redirect('view_publication')
 
     editors = CustomUser.objects.filter(role='editor')
 

@@ -765,7 +765,7 @@ class PublisherViewTest(TestCase):
             }
         )
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
         self.assertIn(
             self.journalist,
@@ -792,7 +792,7 @@ class PublisherViewTest(TestCase):
             }
         )
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
 
         self.assertIn(
             self.editor,

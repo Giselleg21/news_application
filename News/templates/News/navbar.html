@@ -38,6 +38,12 @@
                             Home
                         </a>
                     </li>
+                {% elif user.role == "publisher" %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'publisher_home' %}">
+                            Home
+                        </a>
+                    </li>
                 {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'home' %}">

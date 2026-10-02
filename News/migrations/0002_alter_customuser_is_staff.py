@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
             model_name='customuser',
             name='is_staff',
             field=models.BooleanField(
-                default=False, help_text='Designates whether the user ' \
+                default=False, help_text='Designates whether the user '
                 'can log into this admin site.', verbose_name='staff status'),
         ),
     ]

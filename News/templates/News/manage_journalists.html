@@ -29,15 +29,19 @@
         <p>No registered journalists are currently available.</p>
     {% endfor %}
 
+    <br>
+
+        <button type="submit" class="btn-primary">
+            Save
+        </button>
+
 </form>
 
 <br><br>
 
-    <a href="{% url 'view_publication' %}">
-        <button type="submit" class="btn-primary">
-            Save
-        </button>
-    </a>
+<a href="{% url 'view_publication' %}">
+    Back to Publication
+</a>
 
 <br><br>
 
@@ -46,3 +50,4 @@
 </a>
 
 {% endblock content %}
+

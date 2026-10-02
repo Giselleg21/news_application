@@ -25,10 +25,10 @@ class Migration(migrations.Migration):
             model_name='customuser',
             name='role',
             field=models.CharField(
-                choices=[('reader', 'Reader'),
-                         ('journalist', 'Journalist'),
-                         ('editor', 'Editor'),
-                         ('publisher', 'Publisher')],
-                         max_length=20),
-        ),
-    ]
+                                    choices=[('reader', 'Reader'),
+                                            ('journalist', 'Journalist'),
+                                            ('editor', 'Editor'),
+                                            ('publisher', 'Publisher')],
+                                            max_length=20),
+                                            ),
+                                            ]
