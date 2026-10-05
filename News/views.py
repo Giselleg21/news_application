@@ -21,7 +21,7 @@ def home(request):
 
 
 def register(request):
-    '''Register a new Reader, Journalist, or Editor.'''
+    '''Register a new Reader, Journalist, Editor or Publisher.'''
 
     if request.method == "POST":
         form = RegistrationForm(request.POST)
@@ -30,7 +30,14 @@ def register(request):
             user = form.save()
 
             role = form.cleaned_data['role']
-            group, created = Group.objects.get_or_create(name=role)
+            group_names = {
+                'reader': 'Reader',
+                'journalist': 'Journalist',
+                'editor': 'Editor',
+                'publisher': 'Publisher'
+            }
+
+            group = Group.objects.get(name=group_names[role])
             user.groups.add(group)
 
             return redirect('login')
