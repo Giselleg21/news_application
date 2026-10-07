@@ -37,7 +37,7 @@ def register(request):
                 'publisher': 'Publisher'
             }
 
-            group = Group.objects.get(name=group_names[role])
+            group, created = Group.objects.get_or_create(name=group_names[role])
             user.groups.add(group)
 
             return redirect('login')
@@ -709,7 +709,7 @@ def manage_journalists(request):
     try:
         publisher = request.user.owned_publisher
     except Publisher.DoesNotExist:
-        return redirect('create_publisher')
+        return redirect('publisher_create')
 
     if request.method == 'POST':
         journalist_ids = request.POST.getlist('journalists')
@@ -746,7 +746,7 @@ def manage_editors(request):
     try:
         publisher = request.user.owned_publisher
     except Publisher.DoesNotExist:
-        return redirect('create_publisher')
+        return redirect('publisher_create')
 
     if request.method == 'POST':
         editor_ids = request.POST.getlist('editors')
@@ -800,7 +800,7 @@ def publisher_delete(request):
     try:
         publisher = request.user.owned_publisher
     except Publisher.DoesNotExist:
-        return redirect('create_publisher')
+        return redirect('publisher_create')
 
     if request.method == 'POST':
         publisher.delete()
@@ -823,7 +823,7 @@ def publisher_update(request):
     try:
         publisher = request.user.owned_publisher
     except Publisher.DoesNotExist:
-        return redirect('create_publisher')
+        return redirect('publisher_create')
 
     if request.method == 'POST':
         form = PublisherNameForm(request.POST, instance=publisher)

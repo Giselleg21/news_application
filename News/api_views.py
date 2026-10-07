@@ -64,7 +64,9 @@ def article_api_detail(request, article_id):
         serializer = ArticleSerializer(article)
         return Response(serializer.data)
 
-    if request.user.role not in ['journalist', 'editor']:
+    if (request.user.role not in ['journalist', 'editor']
+        or (request.user.role == 'journalist'
+            and article.author != request.user)):
         return Response(
             {'error': 'You do not have permission to modify articles.'},
             status=status.HTTP_403_FORBIDDEN

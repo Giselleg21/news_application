@@ -321,6 +321,13 @@ class APIArticleModifyTest(APITestCase):
             role='journalist'
         )
 
+        self.other_journalist = User.objects.create_user(
+            username='other_journalist',
+            email='other_journalist@test.com',
+            password='TestPassword123',
+            role='journalist'
+        )
+
         self.editor = User.objects.create_user(
             username='modify_editor',
             email='modify_editor@test.com',
@@ -388,6 +395,29 @@ class APIArticleModifyTest(APITestCase):
             200
         )
 
+    def test_other_journalist_cannot_update_article(self):
+        token = Token.objects.create(
+            user=self.other_journalist
+        )
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f'Token {token.key}'
+        )
+
+        response = self.client.put(
+            f'/api/articles/{self.article.id}/',
+            {
+                'title': 'Journalist Attempt',
+                'content': 'This should not be allowed.'
+            },
+            format='json'
+        )
+
+        self.assertEqual(
+            response.status_code,
+            403
+        )
+
     def test_reader_cannot_update_article(self):
         token = Token.objects.create(
             user=self.reader
@@ -430,6 +460,31 @@ class APIArticleModifyTest(APITestCase):
         )
 
         self.assertFalse(
+            Article.objects.filter(
+                id=self.article.id
+            ).exists()
+        )
+
+    def test_other_journalist_cannot_delete_article(self):
+        token = Token.objects.create(
+            user=self.other_journalist
+        )
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f'Token {token.key}'
+        )
+
+        response = self.client.delete(
+            f'/api/articles/{self.article.id}/',
+            format='json'
+        )
+
+        self.assertEqual(
+            response.status_code,
+            403
+        )
+
+        self.assertTrue(
             Article.objects.filter(
                 id=self.article.id
             ).exists()
@@ -569,23 +624,106 @@ class NewsletterTest(TestCase):
             newsletter.articles.all()
         )
 
-    def test_editor_can_create_newsletter(self):
-        newsletter = Newsletter.objects.create(
-            title='Editor Newsletter',
-            description='A newsletter created by an editor.',
-            author=self.editor
+    def test_editor_cannot_create_newsletter(self):
+        self.client.login(
+            username='newsletter_editor',
+            password='TestPassword123'
         )
 
-        newsletter.articles.add(self.article)
+        response = self.client.get(
+            '/newsletters/create/'
+        )
 
         self.assertEqual(
-            newsletter.author,
-            self.editor
+            response.status_code,
+            403
         )
 
-        self.assertIn(
-            self.article,
-            newsletter.articles.all()
+    def test_editor_can_update_newsletter(self):
+        publisher = Publisher.objects.create(
+            name='Test Publisher',
+            owner=self.editor
+        )
+
+        publisher.journalists.add(self.journalist)
+        publisher.editors.add(self.editor)
+
+        newsletter = Newsletter.objects.create(
+            title='Original Newsletter',
+            description='Original description.',
+            author=self.journalist
+        )
+
+        self.client.login(
+            username='newsletter_editor',
+            password='TestPassword123'
+        )
+
+        response = self.client.post(
+            reverse(
+                'newsletter_update',
+                kwargs={'newsletter_id': newsletter.id}
+            ),
+            {
+                'title': 'Updated Newsletter',
+                'description': 'Updated description.',
+                'articles': [self.article.id]
+            }
+        )
+
+        self.assertEqual(
+            response.status_code,
+            302
+        )
+
+        newsletter.refresh_from_db()
+
+        self.assertEqual(
+            newsletter.title,
+            'Updated Newsletter'
+        )
+
+        self.assertEqual(
+            newsletter.description,
+            'Updated description.'
+        )
+
+    def test_editor_can_delete_newsletter(self):
+        publisher = Publisher.objects.create(
+            name='Test Publisher',
+            owner=self.editor
+        )
+
+        publisher.journalists.add(self.journalist)
+        publisher.editors.add(self.editor)
+
+        newsletter = Newsletter.objects.create(
+            title='Newsletter To Delete',
+            description='This newsletter will be deleted.',
+            author=self.journalist
+        )
+
+        self.client.login(
+            username='newsletter_editor',
+            password='TestPassword123'
+        )
+
+        response = self.client.post(
+            reverse(
+                'newsletter_delete',
+                kwargs={'newsletter_id': newsletter.id}
+            )
+        )
+
+        self.assertEqual(
+            response.status_code,
+            302
+        )
+
+        self.assertFalse(
+            Newsletter.objects.filter(
+                id=newsletter.id
+            ).exists()
         )
 
     def test_reader_cannot_create_newsletter(self):
