@@ -82,7 +82,7 @@ Editors can:
 
 * Delete articles.
 
-* Create and manage newsletters.
+* View, update, and delete newsletters associated with their publication.
 
 Editors are responsible for reviewing articles before they become approved.
 
@@ -164,7 +164,9 @@ Newsletters contain:
 
 * Associated articles
 
-Journalists and editors can create and manage newsletters.
+Journalists can create, update, and delete newsletters.
+
+Editors can view, update, and delete newsletters associated with their publication, but cannot create newsletters.
 
 Multiple articles can be associated with a newsletter. Removing an article from a newsletter does not delete the article itself.
 
@@ -575,7 +577,7 @@ python manage.py test
 
 The tests should complete successfully before using the application.
 
-The project currently has **26 automated tests**, all of which pass successfully.
+The project currently has 30 automated tests, all of which pass successfully.
 
 ---
 
