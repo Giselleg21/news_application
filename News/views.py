@@ -447,7 +447,7 @@ def newsletter_detail(request, newsletter_id):
 
 @login_required
 def newsletter_create(request):
-    '''Allow journalists and editors to create newsletters.'''
+    '''Allow journalists to create newsletters.'''
 
     if request.user.role not in ['journalist']:
         return render(
