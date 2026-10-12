@@ -35,11 +35,21 @@ class RegistrationForm(UserCreationForm):
         return email
 
 
+
 class ArticleForm(forms.ModelForm):
     '''The submitted format for articles'''
+
     class Meta:
         model = Article
-        fields = ['title', 'content']
+        fields = ['title', 'content', 'publisher']
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+        self.fields['publisher'].queryset = Publisher.objects.filter(
+            journalists=user
+        ) if user else Publisher.objects.none()
 
 
 class NewsletterForm(forms.ModelForm):
@@ -75,3 +85,23 @@ class PublisherNameForm(forms.ModelForm):
     class Meta:
         model = Publisher
         fields = ['name']
+
+
+class ReaderSubscriptionForm(forms.ModelForm):
+    '''Form used for readers to subscribe to publishers and journalists.'''
+
+    journalist_subscriptions = forms.ModelMultipleChoiceField(
+        queryset=CustomUser.objects.filter(role='journalist'),
+        required=False,
+        widget=forms.CheckboxSelectMultiple
+    )
+
+    publisher_subscriptions = forms.ModelMultipleChoiceField(
+        queryset=Publisher.objects.all(),
+        required=False,
+        widget=forms.CheckboxSelectMultiple
+    )
+    
+    class Meta:
+        model = CustomUser
+        fields = ['journalist_subscriptions', 'publisher_subscriptions']

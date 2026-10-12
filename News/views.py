@@ -12,7 +12,8 @@ from .forms import (RegistrationForm,
                     NewsletterForm,
                     ArticleForm,
                     PublisherForm,
-                    PublisherNameForm)
+                    PublisherNameForm,
+                    ReaderSubscriptionForm)
 
 
 def home(request):
@@ -37,7 +38,8 @@ def register(request):
                 'publisher': 'Publisher'
             }
 
-            group, created = Group.objects.get_or_create(name=group_names[role])
+            group, created = Group.objects.get_or_create(
+                name=group_names[role])
             user.groups.add(group)
 
             return redirect('login')
@@ -83,6 +85,34 @@ def logout_confirm(request):
     return render(
         request,
         'News/logout_confirm.html'
+    )
+
+
+@login_required
+def reader_subscriptions(request):
+    '''Allows readers to manage their publisher
+    and journalist subscriptions.'''
+
+    if request.user.role != 'reader':
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = ReaderSubscriptionForm(
+            request.POST,
+            instance=request.user
+        )
+
+        if form.is_valid():
+            form.save()
+            return redirect('reader_home')
+
+    else:
+        form = ReaderSubscriptionForm(instance=request.user)
+
+    return render(
+        request,
+        'News/reader_subscriptions.html',
+        {'form': form}
     )
 
 
@@ -183,13 +213,7 @@ def article_list(request):
         )
 
     elif request.user.role == 'editor':
-        publisher_ids = Publisher.objects.filter(
-            editors=request.user
-        ).values_list('id', flat=True)
-
-        articles = Article.objects.filter(
-            publisher_id__in=publisher_ids
-        )
+        articles = Article.objects.all()
 
     elif request.user.role == 'publisher':
         try:
@@ -235,17 +259,12 @@ def article_create(request):
     if request.user.role != 'journalist':
         return redirect('home')
 
-    publisher = Publisher.objects.filter(
-        journalists=request.user
-    ).first()
-
     if request.method == 'POST':
-        form = ArticleForm(request.POST)
+        form = ArticleForm(request.POST, user=request.user)
 
         if form.is_valid():
             article = form.save(commit=False)
             article.author = request.user
-            article.publisher = publisher
             article.save()
 
             return redirect(
@@ -254,14 +273,13 @@ def article_create(request):
             )
 
     else:
-        form = ArticleForm()
+        form = ArticleForm(user=request.user)
 
     return render(
         request,
         'News/article_form.html',
         {
             'form': form,
-            'publisher': publisher,
         }
     )
 
@@ -290,21 +308,11 @@ def article_update(request, article_id):
                 status=403
             )
 
-    if request.user.role == 'editor':
-        if not Publisher.objects.filter(
-            editors=request.user,
-            id=article.publisher_id
-        ).exists():
-            return render(
-                request,
-                'News/access_denied.html',
-                status=403
-            )
-
     if request.method == 'POST':
         form = ArticleForm(
             request.POST,
-            instance=article
+            instance=article,
+            user=request.user
         )
 
         if form.is_valid():
@@ -316,7 +324,8 @@ def article_update(request, article_id):
             )
 
     else:
-        form = ArticleForm(instance=article)
+        form = ArticleForm(instance=article,
+                           user=request.user)
 
     return render(
         request,
@@ -346,17 +355,6 @@ def article_delete(request, article_id):
 
     if request.user.role == 'journalist':
         if article.author != request.user:
-            return render(
-                request,
-                'News/access_denied.html',
-                status=403
-            )
-
-    if request.user.role == 'editor':
-        if not Publisher.objects.filter(
-            editors=request.user,
-            id=article.publisher_id
-        ).exists():
             return render(
                 request,
                 'News/access_denied.html',

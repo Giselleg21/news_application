@@ -3,7 +3,7 @@
 {% block content %}
 <h1 style="text-align: center">Articles</h1>
 
-{% if user.role == 'reader' or 'publisher' %}
+{% if user.role == 'reader' %}
     {% if articles %}
         <ul>
             {% for article in articles %}
@@ -21,11 +21,29 @@
         <p>No articles currently available</p>
     {% endif %}
 
-{% elif user.role == 'editor' %}
+{% elif user.role == 'publisher' %}
     <ul>
         {% for article in articles %}
                 <li>
                     <a href="{% url 'article_detail' article.id %}">
+                        {{ article.title }}
+                        {% if article.approved == False %}
+                            <p>[unapproved]</p>
+                        {% else %}
+                            <p>[approved]</p>
+                        {% endif %}
+                    </a>
+                </li>
+        {% empty %}
+            <p>No articles currently available</p>
+        {% endfor %}
+    </ul>
+
+{% elif user.role == 'editor' %}
+    <ul>
+        {% for article in articles %}
+                <li>
+                    <a href="{% url 'review_article_detail' article.id %}">
                         {{ article.title }}
                         {% if article.approved == False %}
                             <p>[unapproved]</p>

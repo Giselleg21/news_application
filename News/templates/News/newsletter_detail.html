@@ -49,7 +49,7 @@
             Back to Newsletters
         </a>
 
-        {% if user.role == 'journalist' %}
+        {% if user.role == 'journalist' or user.role == 'editor' %}
             <a href="{% url 'newsletter_update' newsletter.id %}"
             class="btn btn-primary">
                 Edit Newsletter
