@@ -1,0 +1,44 @@
+{% extends 'News/base.html' %}
+
+{% block title %}
+Subscription Successful - News Application
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow-sm text-center">
+                <div class="card-body py-5">
+
+                    <h1 class="display-5">
+                        Subscription Successful!
+                    </h1>
+
+                    <p class="lead mt-3">
+                        You have successfully subscribed to
+                        {{ journalist.username }}.
+                    </p>
+
+                    <p class="text-muted">
+                        You can continue reading their articles
+                        and stay connected with their work.
+                    </p>
+
+                    <div class="mt-4">
+                        <a href="{% url 'article_detail' article_id=article.id %}"
+                           class="btn btn-primary">
+                            Return to Article
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

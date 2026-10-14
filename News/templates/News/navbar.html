@@ -80,7 +80,7 @@
                     </li>
                 {% endif %}
                 
-                {% if user.role == 'journalist' %}
+                {% if user.role == 'journalist' or user.role == 'editor' %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'my_newsletters' %}">
                             Newsletters

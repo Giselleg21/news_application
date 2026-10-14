@@ -8,7 +8,7 @@
 
 <div class="row justify-content-center">
     <div class="col-md-8">
-
+        
         <h1 class="text-center mb-4">
             {% if newsletter %}
                 Edit Newsletter
@@ -16,10 +16,11 @@
                 Create Newsletter
             {% endif %}
         </h1>
-
+        
         <div class="card shadow-sm">
             <div class="card-body">
-
+                
+                {% if articles %}
                 <form method="post">
                     {% csrf_token %}
 
@@ -41,10 +42,52 @@
                     </div>
 
                 </form>
+                {% else %}
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
 
+                            <div class="card shadow-sm text-center">
+                                <div class="card-body py-5">
+
+                                    <h1 class="display-5">
+                                        Option Unavailable
+                                    </h1>
+
+                                    <p class="lead mt-3">
+                                        You cannot create a newsletter as there are no available articles.
+                                    </p>
+
+                                    <p class="text-muted">
+                                        Please return to the home page.
+                                    </p>
+                                    
+                                    {% if user.role == 'journalist' %}
+                                    <div class="mt-4">
+                                        <a href="{% url 'journalist_home' %}" class="btn btn-primary">
+                                            Back to Home
+                                        </a>
+                                    </div>
+                                    {% else %}
+                                    <div class="mt-4">
+                                        <a href="{% url 'editor_home' %}" class="btn btn-primary">
+                                            Back to Home
+                                        </a>
+                                    </div>
+                                    {% endif %}
+
+                                        {% if not user.is_authenticated %}
+                                            <a href="{% url 'login' %}" class="btn btn-secondary">
+                                                Login
+                                            </a>
+                                        {% endif %}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         </div>
-
     </div>
 </div>
 

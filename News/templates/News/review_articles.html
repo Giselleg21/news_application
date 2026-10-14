@@ -18,7 +18,7 @@ Review Articles - News Application
             <div class="list-group">
 
                 {% for article in articles %}
-
+                    {% if article.publisher is not None %}
                     <div class="list-group-item mb-3 shadow-sm">
 
                         <h3>
@@ -59,7 +59,7 @@ Review Articles - News Application
                         </div>
 
                     </div>
-
+                    {% endif %}
                 {% endfor %}
 
             </div>
@@ -68,6 +68,10 @@ Review Articles - News Application
 
             <div style="text-align: center;">
                 There are no articles waiting for review.
+                <br><br>
+                <a href="{% url 'editor_home' %}">
+                    Back to Home
+                </a>
             </div>
 
         {% endif %}

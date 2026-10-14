@@ -45,10 +45,18 @@
                 <li>
                     <a href="{% url 'review_article_detail' article.id %}">
                         {{ article.title }}
-                        {% if article.approved == False %}
-                            <p>[unapproved]</p>
+                        {% if article.publisher is not None %}
+                            {% if article.approved == False %}
+                                <p>[unapproved]</p>
+                            {% else %}
+                                <p>[approved]</p>
+                            {% endif %}
                         {% else %}
-                            <p>[approved]</p>
+                            {% if article.approved == False %}
+                                <p>[unpublished]</p>
+                            {% else %}
+                                <p>[independently published]</p>
+                            {% endif %}
                         {% endif %}
                     </a>
                 </li>

@@ -156,7 +156,7 @@ class Migration(migrations.Migration):
                 ('publisher_subscriptions', models.ManyToManyField(
                     blank=True,
                     related_name='subscribed_readers',
-                    to='News.publisher'
+                    to='news.publisher'
                 )),
                 ('user_permissions', models.ManyToManyField(
                     blank=True,
@@ -216,7 +216,7 @@ class Migration(migrations.Migration):
                 )),
                 ('articles', models.ManyToManyField(
                     related_name='newsletters',
-                    to='News.article'
+                    to='news.article'
                 )),
                 ('author', models.ForeignKey(
                     on_delete=django.db.models.deletion.CASCADE,
@@ -242,7 +242,7 @@ class Migration(migrations.Migration):
                 null=True,
                 on_delete=django.db.models.deletion.SET_NULL,
                 related_name='articles',
-                to='News.publisher'
+                to='news.publisher'
             ),
         ),
     ]

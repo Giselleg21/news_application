@@ -1,0 +1,68 @@
+{% extends 'News/base.html' %}
+
+{% block title %}
+Publish Independently - News Application
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+
+            <h1 class="card-title mb-4">
+                Publish Independently
+            </h1>
+
+            <h2>
+                {{ article.title }}
+            </h2>
+
+            <p class="text-muted">
+                Written by {{ article.author.username }}
+                on {{ article.created_at|date:"d F Y" }}
+            </p>
+
+            {% if article.publisher %}
+                <p class="text-muted">
+                    Publisher: {{ article.publisher.name }}
+                </p>
+            {% endif %}
+
+            <hr>
+
+            <p>
+                {{ article.content }}
+            </p>
+
+            <hr>
+
+            <p>
+                Are you sure you want to Publish this article?
+            </p>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <button type="submit" class="btn btn-success">
+                    Publish Article
+                </button>
+
+                <a href="{% url 'my_articles' %}"
+                   class="btn btn-secondary" style="color:black" >
+                    Back to Articles
+                </a>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+{% endblock content %}

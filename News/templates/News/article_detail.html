@@ -35,13 +35,8 @@
 
             </div>
         </article>
-
-        <div class="mt-4">
-            <a href="{% url 'article_list' %}" class="btn btn-primary">
-                Back to Articles
-            </a>
-
-            {% if user.role == 'journalist' or user.role == 'editor' %}
+        <div class="mt-4 d-flex-wrap align-items-center gap-2">
+            {% if user.role == 'editor' %}
                 <a href="{% url 'article_update' article.id %}"
                    class="btn btn-primary">
                     Edit Article
@@ -49,6 +44,77 @@
                 <a href="{% url 'article_delete' article.id %}" class="btn btn-primary">
                     Delete Article
                 </a>
+                <a href="{% url 'article_list' %}" class="btn btn-primary">
+                    Back to Articles
+                </a>
+            
+            {% elif user.role == 'journalist' %}
+                <a href="{% url 'article_update' article.id %}" class="btn btn-primary">
+                    Edit Article
+                </a>
+                <a href="{% url 'article_delete' article.id %}" class="btn btn-primary">
+                    Delete Article
+                </a>
+                {% if article.publisher is None %}
+                <a href="{% url 'publish_independently' article.id %}" class="btn btn-primary">
+                    Publish Article
+                </a>
+                {% endif %}
+                <a href="{% url 'my_articles' %}" class="btn btn-primary">
+                    Back to Articles
+                </a>
+
+            {% elif user.role == 'reader' %}
+                <a href="{% url 'article_list' %}" class="btn btn-primary">
+                    Back to Articles
+                </a>
+                {% if article.author in user.journalist_subscriptions.all %}
+                <form method="get" 
+                      action="{% url 'unsubscribe_from_journalist' article.id %}"
+                      class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">
+                        Unsubscribe from Journalist
+                    </button>
+                </form>
+
+                {% else %}
+                <form method="post" 
+                      action="{% url 'subscribe_to_journalist' article.id %}"
+                      class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">
+                        Subscribe to Journalist
+                    </button>
+                </form>
+                {% endif %}
+
+                {% if article.publisher in user.publisher_subscriptions.all %}
+                <form method="get"
+                      action="{% url 'unsubscribe_from_publication' article.id %}"
+                      class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">
+                        Unsubscribe from Publication
+                    </button>
+                </form>
+
+                {% else %}
+                    {% if article.publisher is not None %}
+                        <form method="post" 
+                              action="{% url 'subscribe_to_publication' article.id %}"
+                              class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success">
+                                Subscribe to Publication
+                            </button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+            {% else %}
+            <a href="{% url 'article_list' %}" class="btn btn-primary">
+                Back to Articles
+            </a>
             {% endif %}
         </div>
 

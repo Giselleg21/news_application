@@ -465,7 +465,7 @@ EXIT;
 Open:
 
 ```text
-News_application/settings.py
+news_application/settings.py
 ```
 
 The database configuration should point to the MariaDB database:
@@ -704,7 +704,7 @@ news_application/
 
 │
 
-├── News/
+├── news/
 
 │   ├── migrations/
 
@@ -734,7 +734,7 @@ news_application/
 
 │
 
-├── News_application/
+├── news_application/
 
 │   ├── settings.py
 

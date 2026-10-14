@@ -49,10 +49,51 @@
                 <a href="{% url 'remove_article_from_newsletter' newsletter.id article.id %}" class="btn btn-primary">
                     Remove Article From Newsletter
                 </a>
-            {% else %}
-                <a href="{% url 'access_denied' %}" class="btn btn-primary">
-                        Remove Article From Newsletter
-                </a>
+            
+            {% elif user.role == 'reader' %}
+                {% if article.author in user.journalist_subscriptions.all %}
+                <form method="get" 
+                      action="{% url 'unsubscribe_from_journalist' article.id %}"
+                      class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">
+                        Unsubscribe from Journalist
+                    </button>
+                </form>
+
+                {% else %}
+                <form method="post" 
+                      action="{% url 'subscribe_to_journalist' article.id %}"
+                      class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">
+                        Subscribe to Journalist
+                    </button>
+                </form>
+                {% endif %}
+
+                {% if article.publisher in user.publisher_subscriptions.all %}
+                <form method="get"
+                      action="{% url 'unsubscribe_from_publication' article.id %}"
+                      class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">
+                        Unsubscribe from Publication
+                    </button>
+                </form>
+
+                {% else %}
+                    {% if article.publisher is not None %}
+                        <form method="post" 
+                              action="{% url 'subscribe_to_publication' article.id %}"
+                              class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success">
+                                Subscribe to Publication
+                            </button>
+                        </form>
+                    {% endif %}
+                {% endif %}
             {% endif %}
         </div>
 

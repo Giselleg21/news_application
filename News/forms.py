@@ -35,7 +35,6 @@ class RegistrationForm(UserCreationForm):
         return email
 
 
-
 class ArticleForm(forms.ModelForm):
     '''The submitted format for articles'''
 
@@ -46,6 +45,7 @@ class ArticleForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+        self.fields['publisher'].empty_label = 'Publish Independently'
 
         self.fields['publisher'].queryset = Publisher.objects.filter(
             journalists=user
@@ -57,6 +57,15 @@ class NewsletterForm(forms.ModelForm):
     class Meta:
         model = Newsletter
         fields = ['title', 'description', 'articles']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['articles'].queryset = Article.objects.filter(
+            approved=True
+        )
+        if not self.fields['articles'].queryset.exists():
+            self.fields['articles'].empty_label = "No articles available"
 
 
 class PublisherForm(forms.ModelForm):
@@ -101,7 +110,7 @@ class ReaderSubscriptionForm(forms.ModelForm):
         required=False,
         widget=forms.CheckboxSelectMultiple
     )
-    
+
     class Meta:
         model = CustomUser
         fields = ['journalist_subscriptions', 'publisher_subscriptions']

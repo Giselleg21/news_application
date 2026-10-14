@@ -1,0 +1,48 @@
+{% extends 'News/base.html' %}
+
+{% block title %}
+    Confirm Unsubscribe - News Application
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow-sm text-center">
+                <div class="card-body py-5">
+
+                    <h1 class="display-5">
+                        Unsubscribe from Journalist
+                    </h1>
+
+                    <p class="lead mt-3">
+                        Are you sure you want to unsubscribe from
+                        <strong>{{ article.author }}</strong>?
+                    </p>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-danger">
+                                Confirm Unsubscribe
+                            </button>
+
+                            <a href="{% url 'article_detail' article_id=article.id %}"
+                               class="btn btn-secondary"
+                               style="color:black">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -9,7 +9,11 @@
             {% if article.author == user %}
                     <a href="{% url 'article_detail' article.id %}">
                         {{ article.title }}
-                        <br><br>
+                        {% if article.approved == True %}
+                            <p>[published]</p>
+                        {% else %}
+                            <p>[Unpublished]</p>
+                        {% endif %}
                     </a>
             {% endif %}
         {% endfor %}

@@ -8,7 +8,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('News', '0004_publisher_owner_alter_customuser_role'),
+        ('news', '0004_publisher_owner_alter_customuser_role'),
     ]
 
     operations = [

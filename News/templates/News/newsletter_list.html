@@ -19,7 +19,7 @@
         <p>No newsletters currently available</p>
     {% endif %}
 
-    {% if user.role == 'journalist' %}
+    {% if user.role == 'journalist' or user.role == 'editor' %}
         <a href="{% url 'newsletter_create' %}">
             <button type="button" class="btn-primary">Add newsletter</button>
         </a>

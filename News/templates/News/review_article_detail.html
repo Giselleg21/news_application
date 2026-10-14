@@ -41,6 +41,10 @@
                 Back to Reviews
             </a>
 
+            <a href="{% url 'article_list' %}" class="btn btn-primary">
+                Back to Articles
+            </a>
+
             {% if user.role == 'journalist' or user.role == 'editor' %}
                 <a href="{% url 'article_update' article.id %}"
                    class="btn btn-primary">
@@ -55,9 +59,11 @@
                 </a>
             {% endif %}
             {% if user.role == 'editor' %}
+                {% if article.publisher is not None %}
                 <a href="{% url 'approve_article' article.id %}" class="btn btn-primary">
                     Approve Article
                 </a>
+                {% endif %}
             {% endif %}
         </div>
 

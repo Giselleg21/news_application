@@ -45,9 +45,6 @@
                 {% endif %}
 
     <div class="mt-4">
-        <a href="{% url 'newsletter_list' %}" class="btn btn-primary">
-            Back to Newsletters
-        </a>
 
         {% if user.role == 'journalist' or user.role == 'editor' %}
             <a href="{% url 'newsletter_update' newsletter.id %}"
@@ -57,6 +54,15 @@
             <a href="{% url 'newsletter_delete' newsletter.id %}" class="btn btn-primary">
                 Delete Newsletter
             </a>
+            <a href="{% url 'my_newsletters' %}"
+            class="btn btn-primary">
+                Back to Newsletters
+            </a>
+        {% else %}
+            <a href="{% url 'newsletter_list' %}" class="btn btn-primary">
+                Back to Newsletters
+            </a>
+
         {% endif %}
     </div>
                 

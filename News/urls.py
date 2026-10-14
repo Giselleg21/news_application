@@ -7,18 +7,18 @@ from django.views.generic import TemplateView
 urlpatterns = [
     # URLs for registration and login
     path('', TemplateView.as_view(
-        template_name='News/home.html'), name='home'),
+        template_name='news/home.html'), name='home'),
     path('reader/', TemplateView.as_view(
-        template_name='News/reader_home.html'), name='reader_home'),
+        template_name='news/reader_home.html'), name='reader_home'),
     path('journalist/', TemplateView.as_view(
-        template_name='News/journalist_home.html'), name='journalist_home'),
+        template_name='news/journalist_home.html'), name='journalist_home'),
     path('editor/', TemplateView.as_view(
-        template_name='News/editor_home.html'), name='editor_home'),
+        template_name='news/editor_home.html'), name='editor_home'),
     path('publisher/', TemplateView.as_view(
-        template_name='News/publisher_home.html'), name='publisher_home'),
+        template_name='news/publisher_home.html'), name='publisher_home'),
     path('register/', views.register, name='register'),
     path('login/', views.CustomLoginView.as_view(
-        template_name='News/login.html'), name='login'),
+        template_name='news/login.html'), name='login'),
     path('logout/', views.logout_confirm, name='logout'),
     path('access-denied/', views.access_denied, name='access_denied'),
 
@@ -37,6 +37,9 @@ urlpatterns = [
          name='article_update'),
     path('articles/<int:article_id>/delete/', views.article_delete,
          name='article_delete'),
+    path('article/<int:article_id>/publish/independently',
+         views.publish_independently,
+         name='publish_independently'),
 
     # URLs for newsletters
     path('newsletters/', views.newsletter_list, name='newsletter_list'),
@@ -67,20 +70,32 @@ urlpatterns = [
 
     # URLs for resetting passwords
     path('password_reset/', auth_views.PasswordResetView.as_view(
-        template_name='News/password_reset.html'), name='password_reset'),
+        template_name='news/password_reset.html'), name='password_reset'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(
-        template_name='News/password_reset_done.html'),
+        template_name='news/password_reset_done.html'),
         name='password_reset_done'),
     path('reset/<uidb64>/<token>/',
          auth_views.PasswordResetConfirmView.as_view(
-          template_name='News/password_reset_confirm.html'),
-          name='password_reset_confirm'),
+          template_name='news/password_reset_confirm.html'),
+         name='password_reset_confirm'),
     path('reset/done/',
          auth_views.PasswordResetCompleteView.as_view(
-          template_name='News/password_reset_complete.html'),
-          name='password_reset_complete'),
+          template_name='news/password_reset_complete.html'),
+         name='password_reset_complete'),
 
     # URL for reader subscriptions
     path('subscriptions/', views.reader_subscriptions,
          name='reader_subscriptions'),
+    path('subscribe/journalist/<int:article_id>/',
+         views.subscribe_to_journalist,
+         name='subscribe_to_journalist'),
+    path('unsubscribe/journalist/<int:article_id>/',
+         views.unsubscribe_from_journalist,
+         name='unsubscribe_from_journalist'),
+    path('subscribe/publisher/<int:article_id>/',
+         views.subscribe_to_publication,
+         name='subscribe_to_publication'),
+    path('unsubscribe/publication/<int:article_id>/',
+         views.unsubscribe_from_publication,
+         name='unsubscribe_from_publication'),
 ]

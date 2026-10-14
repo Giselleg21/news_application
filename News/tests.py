@@ -570,12 +570,15 @@ class SubscribedArticlesAPITest(APITestCase):
         )
 
 
+
 class NewsletterTest(TestCase):
+    """Tests for newsletter functionality."""
 
     def setUp(self):
         Group.objects.get_or_create(name='Reader')
         Group.objects.get_or_create(name='Journalist')
         Group.objects.get_or_create(name='Editor')
+        Group.objects.get_or_create(name='Publisher')
 
         self.reader = User.objects.create_user(
             username='newsletter_reader',
@@ -606,6 +609,7 @@ class NewsletterTest(TestCase):
         )
 
     def test_journalist_can_create_newsletter(self):
+        """A Journalist can create a newsletter."""
         newsletter = Newsletter.objects.create(
             title='Journalist Newsletter',
             description='A newsletter created by a journalist.',
@@ -624,7 +628,8 @@ class NewsletterTest(TestCase):
             newsletter.articles.all()
         )
 
-    def test_editor_cannot_create_newsletter(self):
+    def test_editor_can_access_newsletter_creation_page(self):
+        """An Editor can access the newsletter creation page."""
         self.client.login(
             username='newsletter_editor',
             password='TestPassword123'
@@ -636,10 +641,11 @@ class NewsletterTest(TestCase):
 
         self.assertEqual(
             response.status_code,
-            403
+            200
         )
 
     def test_editor_can_update_newsletter(self):
+        """An Editor can update a newsletter in their publication."""
         publisher = Publisher.objects.create(
             name='Test Publisher',
             owner=self.editor
@@ -688,19 +694,49 @@ class NewsletterTest(TestCase):
             'Updated description.'
         )
 
-    def test_editor_can_delete_newsletter(self):
-        publisher = Publisher.objects.create(
-            name='Test Publisher',
-            owner=self.editor
+    def test_editor_cannot_update_newsletter_outside_publication(self):
+        """An Editor cannot update an unrelated journalist's newsletter."""
+        newsletter = Newsletter.objects.create(
+            title='Unrelated Newsletter',
+            description='Outside the editor publication.',
+            author=self.journalist
         )
 
-        publisher.journalists.add(self.journalist)
-        publisher.editors.add(self.editor)
+        self.client.login(
+            username='newsletter_editor',
+            password='TestPassword123'
+        )
 
+        response = self.client.post(
+            reverse(
+                'newsletter_update',
+                kwargs={'newsletter_id': newsletter.id}
+            ),
+            {
+                'title': 'Attempted Update',
+                'description': 'This should not be saved.',
+                'articles': [self.article.id]
+            }
+        )
+
+        self.assertEqual(
+            response.status_code,
+            403
+        )
+
+        newsletter.refresh_from_db()
+
+        self.assertEqual(
+            newsletter.title,
+            'Unrelated Newsletter'
+        )
+
+    def test_editor_can_delete_own_newsletter(self):
+        """An Editor can delete a newsletter they authored."""
         newsletter = Newsletter.objects.create(
-            title='Newsletter To Delete',
-            description='This newsletter will be deleted.',
-            author=self.journalist
+            title='Editor Newsletter To Delete',
+            description='Created by the editor.',
+            author=self.editor
         )
 
         self.client.login(
@@ -726,10 +762,51 @@ class NewsletterTest(TestCase):
             ).exists()
         )
 
-    def test_reader_cannot_create_newsletter(self):
-        self.assertNotIn(
-            self.reader.role,
-            ['journalist', 'editor']
+    def test_editor_cannot_delete_journalist_newsletter(self):
+        """An Editor cannot delete a newsletter they did not author."""
+        newsletter = Newsletter.objects.create(
+            title='Journalist Newsletter To Keep',
+            description='Created by the journalist.',
+            author=self.journalist
+        )
+
+        self.client.login(
+            username='newsletter_editor',
+            password='TestPassword123'
+        )
+
+        response = self.client.post(
+            reverse(
+                'newsletter_delete',
+                kwargs={'newsletter_id': newsletter.id}
+            )
+        )
+
+        self.assertEqual(
+            response.status_code,
+            403
+        )
+
+        self.assertTrue(
+            Newsletter.objects.filter(
+                id=newsletter.id
+            ).exists()
+        )
+
+    def test_reader_cannot_access_newsletter_creation_page(self):
+        """A Reader cannot create a newsletter."""
+        self.client.login(
+            username='newsletter_reader',
+            password='TestPassword123'
+        )
+
+        response = self.client.get(
+            '/newsletters/create/'
+        )
+
+        self.assertEqual(
+            response.status_code,
+            403
         )
 
 
@@ -765,8 +842,8 @@ class ArticleApprovalSignalTest(TestCase):
             approved=False
         )
 
-    @patch('News.signals.send_mail')
-    @patch('News.signals.requests.post')
+    @patch('news.signals.send_mail')
+    @patch('news.signals.requests.post')
     def test_approval_sends_notification(
         self,
         mock_post,
@@ -834,7 +911,7 @@ class PublisherViewTest(TestCase):
         response = self.client.post(
             reverse('publisher_create'),
             {
-                'name': 'Test News',
+                'name': 'Test news',
                 'journalists': [self.journalist.id],
                 'editors': [self.editor.id],
             }
@@ -848,7 +925,7 @@ class PublisherViewTest(TestCase):
 
         self.assertEqual(
             publisher.name,
-            'Test News'
+            'Test news'
         )
 
         self.assertIn(
@@ -887,7 +964,7 @@ class PublisherViewTest(TestCase):
         '''A Publisher can assign Journalists to their publication.'''
 
         publisher = Publisher.objects.create(
-            name='Test News',
+            name='Test news',
             owner=self.publisher_user
         )
 
@@ -914,7 +991,7 @@ class PublisherViewTest(TestCase):
         '''A Publisher can assign Editors to their publication.'''
 
         publisher = Publisher.objects.create(
-            name='Test News',
+            name='Test news',
             owner=self.publisher_user
         )
 
@@ -941,7 +1018,7 @@ class PublisherViewTest(TestCase):
         '''A Publisher can view their own publication.'''
 
         Publisher.objects.create(
-            name='Test News',
+            name='Test news',
             owner=self.publisher_user
         )
 
@@ -958,7 +1035,7 @@ class PublisherViewTest(TestCase):
 
         self.assertContains(
             response,
-            'Test News'
+            'Test news'
         )
 
     def test_publisher_without_publication_is_redirected(self):
@@ -982,7 +1059,7 @@ class PublisherViewTest(TestCase):
         '''A Publisher can update their publication name.'''
 
         Publisher.objects.create(
-            name='Old News',
+            name='Old news',
             owner=self.publisher_user
         )
 
@@ -994,7 +1071,7 @@ class PublisherViewTest(TestCase):
         response = self.client.post(
             reverse('publisher_update'),
             {
-                'name': 'New News'
+                'name': 'New news'
             }
         )
 
@@ -1009,5 +1086,136 @@ class PublisherViewTest(TestCase):
 
         self.assertEqual(
             publisher.name,
-            'New News'
+            'New news'
+        )
+
+
+class ReaderPublisherSubscriptionTest(TestCase):
+    """Tests for reader subscriptions to publishers."""
+
+    def setUp(self):
+        Group.objects.get_or_create(name='Reader')
+        Group.objects.get_or_create(name='Journalist')
+        Group.objects.get_or_create(name='Editor')
+        Group.objects.get_or_create(name='Publisher')
+
+        self.reader = User.objects.create_user(
+            username='publisher_sub_reader',
+            email='publisher_sub_reader@test.com',
+            password='TestPassword123',
+            role='reader'
+        )
+
+        self.publisher_user = User.objects.create_user(
+            username='subscription_publisher',
+            email='subscription_publisher@test.com',
+            password='TestPassword123',
+            role='publisher'
+        )
+
+        self.publisher = Publisher.objects.create(
+            name='Subscription News',
+            owner=self.publisher_user
+        )
+
+    def test_reader_can_subscribe_to_publisher(self):
+        """A Reader can subscribe to a Publisher."""
+        self.reader.publisher_subscriptions.add(
+            self.publisher
+        )
+
+        self.assertTrue(
+            self.reader.publisher_subscriptions.filter(
+                id=self.publisher.id
+            ).exists()
+        )
+
+    def test_publisher_can_view_subscribed_readers(self):
+        """A Publisher can access its related subscribers."""
+        self.reader.publisher_subscriptions.add(
+            self.publisher
+        )
+
+        self.assertIn(
+            self.reader,
+            self.publisher.subscribed_readers.all()
+        )
+
+    def test_reader_can_unsubscribe_from_publisher(self):
+        """A Reader can remove a publisher subscription."""
+        self.reader.publisher_subscriptions.add(
+            self.publisher
+        )
+
+        self.reader.publisher_subscriptions.remove(
+            self.publisher
+        )
+
+        self.assertFalse(
+            self.reader.publisher_subscriptions.filter(
+                id=self.publisher.id
+            ).exists()
+        )
+
+
+class ReaderJournalistSubscriptionTest(TestCase):
+    """Tests for reader subscriptions to journalists."""
+
+    def setUp(self):
+        Group.objects.get_or_create(name='Reader')
+        Group.objects.get_or_create(name='Journalist')
+        Group.objects.get_or_create(name='Editor')
+        Group.objects.get_or_create(name='Publisher')
+
+        self.reader = User.objects.create_user(
+            username='journalist_sub_reader',
+            email='journalist_sub_reader@test.com',
+            password='TestPassword123',
+            role='reader'
+        )
+
+        self.journalist = User.objects.create_user(
+            username='subscription_journalist',
+            email='subscription_journalist@test.com',
+            password='TestPassword123',
+            role='journalist'
+        )
+
+    def test_reader_can_subscribe_to_journalist(self):
+        """A Reader can subscribe to a Journalist."""
+        self.reader.journalist_subscriptions.add(
+            self.journalist
+        )
+
+        self.assertTrue(
+            self.reader.journalist_subscriptions.filter(
+                id=self.journalist.id
+            ).exists()
+        )
+
+    def test_journalist_can_view_subscribed_readers(self):
+        """A Journalist can access their related subscribers."""
+        self.reader.journalist_subscriptions.add(
+            self.journalist
+        )
+
+        self.assertIn(
+            self.reader,
+            self.journalist.journalist_subscribers.all()
+        )
+
+    def test_reader_can_unsubscribe_from_journalist(self):
+        """A Reader can remove a journalist subscription."""
+        self.reader.journalist_subscriptions.add(
+            self.journalist
+        )
+
+        self.reader.journalist_subscriptions.remove(
+            self.journalist
+        )
+
+        self.assertFalse(
+            self.reader.journalist_subscriptions.filter(
+                id=self.journalist.id
+            ).exists()
         )
