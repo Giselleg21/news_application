@@ -57,6 +57,8 @@ Journalists can:
 * Update articles.
 
 * Delete articles.
+  
+* Publish articles independently.
 
 * Create newsletters.
 
@@ -68,7 +70,7 @@ Journalists can:
 
 * Remove articles from newsletters.
 
-New articles created by journalists require editor approval before being publicly available.
+New articles created by journalists require editor approval before being publicly available if they are published by a registered publication. Journalists can also choose to publish their articles independently.
 
 #### Editor
 
@@ -81,6 +83,8 @@ Editors can:
 * Update articles.
 
 * Delete articles.
+
+* Create, edit and delete their own nesletters.
 
 * View, update, and delete newsletters associated with their publication.
 
@@ -127,10 +131,13 @@ Articles contain:
 Articles are initially created with `approved=False`.
 
 An editor can review an article and approve it. Once approved, the article becomes available to readers.
+If published independently, the journalist must personally publish the article before it becomes available to readers.
 
 ---
 
 ## Article Approval
+
+This applies only to articles published by a registered publication.
 
 The application includes an editor-only article review system.
 
@@ -166,7 +173,7 @@ Newsletters contain:
 
 Journalists can create, update, and delete newsletters.
 
-Editors can view, update, and delete newsletters associated with their publication, but cannot create newsletters.
+Editors can view, update, and delete newsletters associated with their publication and create their own newsletters.
 
 Multiple articles can be associated with a newsletter. Removing an article from a newsletter does not delete the article itself.
 
@@ -183,6 +190,8 @@ Readers can subscribe to:
 The application uses Django `ManyToManyField` relationships to manage subscriptions.
 
 The subscribed articles API filters approved articles according to the reader's subscriptions.
+
+Readers can manage their subscriptions on their dashboard or via the specific newsletter or article.
 
 ---
 
